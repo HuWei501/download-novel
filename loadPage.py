@@ -2,9 +2,7 @@ import random
 import re
 from urllib import request
 from userAgent import userAgents
-
-list_url = r'https://www.biquke.com/bq/37/37868'
-content_url = r'https://www.biquke.com/bq/37/37868/10576640.html'
+from urls import list_url, content_url
 
 # 1 获取列表 2 获取内容
 state = 2
@@ -41,8 +39,12 @@ def getPageCotent(page):
     content = content.replace('<br/>', '\n').replace('&nbsp;', '')
     next_pattern = re.compile('<div.*?"bottem1">.*?章节列表.*?<a href="(.*?)">下一章</a>', re.S)
     nextUrl = re.findall(next_pattern, page)[0]
-    string = title + '\n' + content + '\n下一章 ' + nextUrl
+    string = title + '\n' + content
     createFile('/content.txt', string)
+    if list_url.find(nextUrl) > -1:
+        print('这是最后一章')
+    else:
+        reWriteUrl(nextUrl[len(list_url):])
 
 
 def createFile(path, content):
@@ -50,6 +52,19 @@ def createFile(path, content):
     f.write(content)
     f.close()
     print('文件已创建')
+
+
+# 重写url
+def reWriteUrl(url):
+    f = open('./urls.py', 'r', encoding='utf-8')
+    content = f.read()
+    f.close()
+    f = open('./urls.py', 'w', encoding='utf-8')
+    pattern = re.compile('content_url.*\'(.*)\'\n', re.S)
+    nowUrl = re.findall(pattern, content)[0]
+    content = content.replace(nowUrl, url)
+    f.write(content)
+    f.close()
 
 
 def start():
