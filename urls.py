@@ -1,2 +1,2 @@
-list_url = r'https://www.biquge.info/40_40289/'
-content_url = list_url + '2057245.html'
+list_url = 'https://www.biquge.info/1_1245/'
+content_url = list_url + '4981915.html'
